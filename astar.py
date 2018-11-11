@@ -62,18 +62,11 @@ def reconstruct_path(came_from, current):
     """
     total_path = []
     total_path.append(current)
-    total_length = 0
-    previous_city = current
     while current in came_from.keys():
         current = came_from[current]
         total_path.append(current)
 
-        # Length of the path
-        connection = current.get_connection_to(previous_city)
-        total_length += connection.distance
-        previous_city = current
-
-    return reversed(total_path), total_length
+    return reversed(total_path)
 
 def a_star_search(city_start, city_dest, heuristic):
     """ A* algorithm to fin the best way between two cities
@@ -85,55 +78,67 @@ def a_star_search(city_start, city_dest, heuristic):
     """
 
     infinity = float("inf")
+
+    # For statistics purpose
+    nb_iteration = 0
     
-    # The set of nodes already evaluated
+    # Node evaluated
     closed_set = set()
 
-    # The set of currently discovered nodes that are not evaluated yet.
-    # Initially, only the start node is known.
+    # Node known but not evaluated yet, initialized with startNode
     open_set = set()
     open_set.add(city_start)
 
-    # For each node, which node it can most efficiently be reached from.
-    # If a node can be reached from many nodes, cameFrom will eventually contain the
-    # most efficient previous step.
+    # Dictionnary of node with the best to come from
     came_from = {}
 
-    # For each node, the cost of getting from the start node to that node.
+    # Cost of the node to go from start
     g_score = {}
 
-    # The cost of going from start to start is zero.
+    # The cost of going from start to start is zero
     g_score[city_start] = 0
 
-    # For each node, the total cost of getting from the start node to the goal
-    # by passing by that node. That value is partly known, partly heuristic.
+    # Total cost of getting from the start to the destination by passing by that node. That value is partly known, partly heuristic
     f_score = {}
 
-    # For the first node, that value is completely heuristic.
+    # The f_score of the first node is completely heuristic
     f_score[city_start] = heuristic(city_start, city_dest)
 
+    # Evaluate node till we have one
     while len(open_set) > 0:
-        current = min(open_set, key=lambda x:f_score.get(x,infinity))
-        if current == city_dest:
-            return reconstruct_path(came_from, current)
+        # Statistics count number of cycles
+        nb_iteration += 1
 
+        # Find best node
+        current = min(open_set, key=lambda x:f_score.get(x,infinity))
+
+        # Final city reached
+        if current == city_dest:
+            return (reconstruct_path(came_from, current), g_score[current], nb_iteration)
+
+        # Renove evaluated node from the set of node to explore and add it to the explored node
         open_set.remove(current)
         closed_set.add(current)
 
+        # Explore all neighbor city and add them, in open_set
         for connection in current.connections:
-            neighbor = connection.get_linked(current) 
-            if neighbor in closed_set:
-                continue		# Ignore the neighbor which is already evaluated.
+            # get the connected city
+            neighbor = connection.get_linked(current)
 
-            # The distance from start to a neighbor
+            # Check if the city is already known and evaluated
+            if neighbor in closed_set:
+                continue # if so ignore it
+
+            # Calculate g_score for this path
             tentative_gscore = g_score.get(current,infinity) + connection.distance
 
-            if neighbor not in open_set:	# Discover a new node
-                open_set.add(neighbor)
+            # Check if this node is known
+            if neighbor not in open_set:
+                open_set.add(neighbor) # new node reached
             elif tentative_gscore >= g_score.get(neighbor,infinity):
-                continue		# This is not a better path.
+                continue # Already known but not a better path
     
-            # This path is the best until now. Record it!
+            # New best path to go to this city, update came_from, g_score and f_score
             came_from[neighbor] = current
             g_score[neighbor] = tentative_gscore
             f_score[neighbor] = g_score.get(neighbor,infinity) + heuristic(neighbor, city_dest)

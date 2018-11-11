@@ -71,7 +71,6 @@ def check_heuristique(heuristiques, heuristique_name):
     method_to_call = getattr(heuristiques, heuristique_name)
     return method_to_call
 
-    
 def main():
     """main program
 
@@ -110,10 +109,11 @@ def main():
     dest_city = check_city(cities, sys.argv[2])
     heuristique = check_heuristique(MapHeuristic, sys.argv[3])
 
-    cities, total_length = a_star_search(start_city, dest_city ,heuristique)
+    (cities, total_length, nb_iteration) = a_star_search(start_city, dest_city ,heuristique)
     for city in cities:
         print(str(city))
     print(f"Total Length : {total_length}")
+    print(f"Nb iterations : {nb_iteration}")
 
 if __name__ == '__main__':
     main()
