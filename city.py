@@ -26,7 +26,7 @@ class City:
         self.connections.append(connection)
 
     def remove_connection(self, connection):
-        """Remove a given connection from the connexions available in this city
+        """Remove a given connection from the connections available in this city
         """
         self.connections.remove(connection)
 
@@ -34,7 +34,7 @@ class City:
         for connection in self.connections:
             if connection.get_linked(self) == city:
                 return connection
-        raise ValueError("No connection this city")
+        raise ValueError("No connection to this city")
 
     def __str__(self):
         """

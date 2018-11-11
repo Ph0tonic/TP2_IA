@@ -69,7 +69,7 @@ def build_path(came_from, current):
     return reversed(total_path)
 
 def a_star_search(city_start, city_dest, heuristic):
-    """ A* algorithm to fin the best way between two cities
+    """ A* algorithm to find the best way between two cities
     
     :param city_start: city where to start
     :param city_dest: destination city

@@ -37,12 +37,12 @@ def load_config():
     :returns: map<city_name string, city City> of the cities
     """
     cities = {}
-    with open("positions.txt") as file:
+    with open("data/positions.txt") as file:
         for line in file:
             name, x, y = line.split(" ")
             cities[name.lower()] = City(name,int(x), int(y))
     
-    with open("connections.txt") as file:
+    with open("data/connections.txt") as file:
         for line in file:
             city_name1, city_name2, distance = line.split(" ")
             city1 = cities[city_name1.lower()]
@@ -110,8 +110,8 @@ def main():
     heuristique = check_heuristique(MapHeuristic, sys.argv[3])
 
     (cities, total_length, nb_iteration) = a_star_search(start_city, dest_city ,heuristique)
-    for city in cities:
-        print(str(city))
+    print('RESULT :')
+    print(' -> '.join([city.name for city in cities]))
     print(f"Total Length : {total_length}")
     print(f"Nb iterations : {nb_iteration}")
 
