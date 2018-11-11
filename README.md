@@ -1,5 +1,6 @@
 # TP2_IA
 - IA TP n°2 - A*
+- Classe : Inf3-dlmb
 - Autheur : Bastien Wermeille
 - Date : 11.11.2018
 
