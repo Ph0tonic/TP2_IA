@@ -57,7 +57,7 @@ class MapHeuristic:
         """
         return MapHeuristic.h1(city1,city2)+MapHeuristic.h2(city1,city2)
 
-def reconstruct_path(came_from, current):
+def build_path(came_from, current):
     """ Create the path from nodes and return it
     """
     total_path = []
@@ -114,7 +114,7 @@ def a_star_search(city_start, city_dest, heuristic):
 
         # Final city reached
         if current == city_dest:
-            return (reconstruct_path(came_from, current), g_score[current], nb_iteration)
+            return (build_path(came_from, current), g_score[current], nb_iteration)
 
         # Renove evaluated node from the set of node to explore and add it to the explored node
         open_set.remove(current)
